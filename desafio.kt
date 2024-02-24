@@ -41,13 +41,50 @@ data class ConteudoEducacional(var nome: String, val duracao: Int = 60) {
   }
 }
 
-data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>) {
+data class Formacao(
+  var nome: String,
+  var conteudos: MutableList<ConteudoEducacional>,
+  val nivel: Nivel,
+  val id: Int,
+) {
+  val inscritos = mutableListOf<Usuario>()
 
-    val inscritos = mutableListOf<Usuario>()
-    
-    fun matricular(usuario: Usuario) {
-        TODO("Utilize o parâmetro $usuario para simular uma matrícula (usar a lista de $inscritos).")
+  companion object {
+    private var contadorIds = 1
+
+    fun criarFormacao(nome: String, conteudos: MutableList<ConteudoEducacional>, nivel: Nivel): Formacao {
+      if (nome.isBlank() || conteudos.isEmpty()) {
+        throw IllegalArgumentException("Nome e conteúdos não podem estar vazios.")
+      }
+      val id = contadorIds++
+      return Formacao(nome, conteudos, nivel, id)
     }
+  }
+
+  fun matricular(usuario: Usuario) {
+    inscritos.add(usuario)
+  }
+
+  fun listarInscritos() {
+    if (inscritos.isEmpty()) {
+      println("Não há usuários matriculados nesta formação.")
+    } else {
+      println("Alunos da formação $nome:")
+      inscritos.forEach { println("${it.id} - ${it.nome}") }
+    }
+  }
+
+  fun alterarNome(novoNome: String) {
+    // Verifica se há alunos matriculados
+    if (inscritos.isEmpty()) {
+      // Se não houver alunos matriculados, altera o nome da formação
+      println("Nome da Formação alterado de \"$nome\" para \"$novoNome\".")
+      nome = novoNome
+    } else {
+      // Se houver alunos matriculados, não permite a alteração do nome
+      throw IllegalStateException("Não é possível alterar o nome da formação pois há alunos matriculados.")
+    }
+  }
 }
 
 fun main() {
