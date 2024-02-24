@@ -34,7 +34,12 @@ class Usuario private constructor(
     }
 }
 
-data class ConteudoEducacional(val nome: String, val duracao: Int = 60)
+data class ConteudoEducacional(var nome: String, val duracao: Int = 60) {
+  fun alterarNome(novoNome: String) {
+    nome = novoNome
+    println("Nome da disciplina alterada de ${this.nome} para $novoNome com sucesso!")
+  }
+}
 
 data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>) {
 
