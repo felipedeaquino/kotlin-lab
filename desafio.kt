@@ -88,6 +88,106 @@ data class Formacao(
 }
 
 fun main() {
-    TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
-    TODO("Simule alguns cenários de teste. Para isso, crie alguns objetos usando as classes em questão.")
+  // Chamando a função de teste
+  realizarTestes()
+}
+
+fun realizarTestes() {
+  // Criar usuários
+  val usuario1 = Usuario.criarUsuario("João", "joao@test.com.br")
+  val usuario2 = Usuario.criarUsuario("Maria", "maria@test.com.br")
+
+  // Criar conteúdos educacionais com duração padrão
+  val conteudo1 = ConteudoEducacional("Introdução à Programação")
+  val conteudo2 = ConteudoEducacional("Algoritmos e Estruturas de Dados")
+    
+  // Criar formação e adicionar conteúdos educacionais pré-existentes
+  val formacao1 = Formacao.criarFormacao(
+    "Desenvolvimento de Software",
+    mutableListOf(conteudo1, conteudo2),
+    Nivel.INTERMEDIARIO
+  )
+    
+  // Criar segunda formação com conteúdo novo e de duração personalizada
+  val formacao2 = Formacao.criarFormacao(
+    "Desenvolvimento em Kotlin",
+    mutableListOf(ConteudoEducacional("Introdução ao Kotlin", 52)),
+    Nivel.BASICO
+  )
+    
+  // Testar dados dos usuários
+  testarDadosUsuario(usuario1)
+  testarDadosUsuario(usuario2)
+
+  // Alterar o nível de um usuário
+  usuario1.alterarNivel(Nivel.INTERMEDIARIO)
+    
+  // Testar dados do usuário1 após alteração de nível
+  testarDadosUsuario(usuario1)
+
+  // Testar alteração de nome do conteúdo educacional
+  testeAlterarNome(conteudo1, "Programação em Python")
+
+  // Matricular usuários na primeira formação
+  formacao1.matricular(usuario1)
+  formacao1.matricular(usuario2)
+
+  // Testar alteração de nome da formação
+  testeAlterarNome(formacao1, "Desenvolvimento Web")
+
+  // Listar os usuários matriculados na primeira formação
+  println("Usuários matriculados na formação 'Desenvolvimento de Software':")
+  formacao1.listarInscritos()
+  println()
+    
+  // Testar dados da segunda formação e dos conteúdos educacionais
+  testarDadosFormacao(formacao1)
+
+  // Testar dados da segunda formação e dos conteúdos educacionais
+  testarDadosFormacao(formacao2)
+
+  // Imprimir a lista de matriculados na segunda formação (deve estar vazia)
+  println("Usuários matriculados na formação 'Desenvolvimento em Kotlin':")
+  formacao2.listarInscritos()
+}
+
+
+fun testarDadosUsuario(usuario: Usuario) {
+  println("Dados do Usuário:")
+  println("Matrícula: ${usuario.id}")
+  println("Nome: ${usuario.nome}")
+  println("Email: ${usuario.email}")
+  println("Nível: ${usuario.nivel}")
+  println()
+}
+
+fun testarDadosFormacao(formacao: Formacao) {
+  println("Dados da Formação:")
+  println("Nome: ${formacao.nome}")
+  println("Nível: ${formacao.nivel}")
+  println("Conteúdos Educacionais:")
+  formacao.conteudos.forEachIndexed { index, conteudo ->
+    println("${index + 1}. Nome: ${conteudo.nome}, Duração: ${conteudo.duracao}")
+  }
+  println()
+}
+
+fun testeAlterarNome(objeto: Any, novoNome: String) {
+  try {
+    when (objeto) {
+      is ConteudoEducacional -> {
+        objeto.alterarNome(novoNome)
+      }
+      is Formacao -> {
+        objeto.alterarNome(novoNome)
+      }
+      is Usuario -> {
+        objeto.alterarNome(novoNome)
+      }
+      else -> throw IllegalArgumentException("Objeto não suportado para alteração de nome.")
+    }
+  } catch (e: Exception) {
+    println("Erro ao tentar alterar o nome: ${e.message}")
+  }
+  println()
 }
